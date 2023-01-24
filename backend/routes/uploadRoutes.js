@@ -45,13 +45,10 @@ router.post(
   upload.single('image',{width: 250, height: 250,}), 
   asyncHandler(async (req, res) => {
     const uploadPhoto = await cloudinary.uploader.upload(
-      `${req.file.path}`,
+      `${req.file.path.toLowerCase()}`,
       { width: 250, height: 250 },
     )
-    // console.log(`called in uploadRoute`)
-    // console.log(`called in upload routes 1`)
-    // console.log(uploadPhoto.url)
-    res.send(uploadPhoto.url)
+    res.send(uploadPhoto.url.toLowerCase())
   }),
 )
 

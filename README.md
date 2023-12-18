@@ -1,4 +1,4 @@
-# CheapShop eCommerse Platform
+# CheapShop - An E-Commerce Platform
 This eCommerse website built using MERN stack and Redux.<br>
 Here are the Snapshot of home page of this application.<br><br>
 For more details see **screenshot** folder above.<br>

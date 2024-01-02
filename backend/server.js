@@ -8,7 +8,6 @@ import orderRoutes from './routes/orderRoutes.js'
 import { notFound,errorHandler } from './middleware/errorMiddleware.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 import pkg from 'cloudinary'
-import morgan from 'morgan'
 const cloudinary=pkg
 dotenv.config();
 cloudinary.config({
@@ -35,11 +34,16 @@ app.get('/api/config/paypal',(req,res)=>{
 
 const __dirname=path.resolve()
 app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
-// if(process.env.NODE_ENV=='prodcution'){
+if(process.env.NODE_ENV=='prodcution'){
     app.use(express.static(path.join(__dirname,'/frontend/build')))
 
     app.get('*',(req,res)=>res.sendFile(path.resolve(__dirname,'frontend','build','index.html')))
-// }
+}
+else {
+    app.get('/',(req,res)=>{
+        res.json('Api is running')
+    })
+}
 
 
 app.use(notFound)

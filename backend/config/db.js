@@ -1,17 +1,17 @@
-import mongoose, { mongo } from 'mongoose'
-import color from 'colors'
+import mongoose from 'mongoose'
+
 mongoose.set('strictQuery', false);
 const connectDB=async()=>{
     try{
-        const connection=await mongoose.connect(process.env.MONGO_URI,{
+        const connection=mongoose.connect(process.env.MONGO_URI,{
             useUnifiedTopology:true,
             useNewUrlParser:true,
             // useCreateIndex:true
         })
-        console.log(`MongoDB connected :${connection.connection.host}`.cyan.underline)
+        console.log(`MongoDB connected :${connection.connection.host}`)
     }
     catch(error){
-         console.log(`Error: ${error.message}`.red.underline.bold)
+         console.log(`Error: ${error.message}`)
          process.exit(1)
     }
 }

@@ -23,7 +23,7 @@ const getProduct = asyncHandler(async (req, res) => {
 
 // des Delete a product
 // route DELETE /api/products/:id
-// acess Public
+// access Public
 const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id)
   if (product) {

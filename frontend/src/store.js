@@ -2,10 +2,9 @@ import {
   legacy_createStore as createStore,
   combineReducers,
   applyMiddleware,
-} 
-from 'redux'
-import thunk from 'redux-thunk'
-import { composeWithDevTools } from 'redux-devtools-extension'
+} from "redux";
+import { thunk } from "redux-thunk";
+import { composeWithDevTools } from "@redux-devtools/extension";
 import {
   productListReducer,
   productDetailsReducer,
@@ -13,9 +12,9 @@ import {
   productCreateReducer,
   productUpdateReducer,
   productCreateReviewReducer,
-  productTopRatedReducer
-} from './reducers/productReducers.js'
-import { cartReducer } from './reducers/cartReducer.js'
+  productTopRatedReducer,
+} from "./reducers/productReducers.js";
+import { cartReducer } from "./reducers/cartReducer.js";
 import {
   userLoginReducer,
   userRegisterReducer,
@@ -23,52 +22,52 @@ import {
   userUpdateProfileReducer,
   userListReducer,
   userDeleteReducer,
-  userUpdateReducer
-} from './reducers/userReducer.js'
+  userUpdateReducer,
+} from "./reducers/userReducer.js";
 import {
-  orderCreateReducer ,
+  orderCreateReducer,
   orderDetailsReducer,
   orderPayReducer,
   orderListMyReducer,
   orderListReducer,
   orderDeliverReducer,
-} from './reducers/orderReducer.js'
+} from "./reducers/orderReducer.js";
 
 const reducer = combineReducers({
   productList: productListReducer,
   productDetails: productDetailsReducer,
-  productDelete:productDeleteReducer,
-  productCreate:productCreateReducer,
-  productUpdate:productUpdateReducer,
-  productCreateReview:productCreateReviewReducer,
-  productTopRated:productTopRatedReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
+  productCreateReview: productCreateReviewReducer,
+  productTopRated: productTopRatedReducer,
   cart: cartReducer,
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
-  userList:userListReducer,
-  userDelete:userDeleteReducer,
-  userUpdate:userUpdateReducer,
-  orderCreate:orderCreateReducer,
-  orderDetails:orderDetailsReducer,
-  orderPay:orderPayReducer,
-  orderListMy:orderListMyReducer,
-  orderList:orderListReducer,
-  orderDeliver:orderDeliverReducer
-})
+  userList: userListReducer,
+  userDelete: userDeleteReducer,
+  userUpdate: userUpdateReducer,
+  orderCreate: orderCreateReducer,
+  orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
+  orderListMy: orderListMyReducer,
+  orderList: orderListReducer,
+  orderDeliver: orderDeliverReducer,
+});
 
-const cartItemsFromStorage = localStorage.getItem('cartItems')
-  ? JSON.parse(localStorage.getItem('cartItems'))
-  : []
+const cartItemsFromStorage = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("cartItems"))
+  : [];
 
-const userInfoFromStorage = localStorage.getItem('userInfo')
-  ? localStorage.getItem('userInfo')
-  : null
+const userInfoFromStorage = localStorage.getItem("userInfo")
+  ? localStorage.getItem("userInfo")
+  : null;
 
-const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
-  ? localStorage.getItem('shippingAddress')
-  : {}
+const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
+  ? localStorage.getItem("shippingAddress")
+  : {};
 
 const intialState = {
   cart: {
@@ -76,15 +75,15 @@ const intialState = {
     shippingAddress: shippingAddressFromStorage,
   },
   userLogin: { userInfo: JSON.parse(userInfoFromStorage) },
-}
-const middleware = [thunk]
+};
+const middleware = [thunk];
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
 
 const store = createStore(
   reducer,
   intialState,
-  composeWithDevTools(applyMiddleware(...middleware)),
-)
+  composeWithDevTools(applyMiddleware(...middleware))
+);
 
-export default store
+export default store;

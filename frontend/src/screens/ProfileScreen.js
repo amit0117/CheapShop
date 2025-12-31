@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import {   useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   Button,
@@ -8,71 +8,67 @@ import {
   FormLabel,
   FormControl,
   Container,
-  Table
-} from 'react-bootstrap'
-import {LinkContainer} from 'react-router-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import Message from '../components/Message.js'
-import Loader from '../components/Loader.js'
-import { getUserDetails, updateUserProfile } from '../actions/userActions.js'
-import { listMyOrder } from '../actions/orderActions.js'
-import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants.js'
+  Table,
+} from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import Message from "../components/Message.js";
+import Loader from "../components/Loader.js";
+import { getUserDetails, updateUserProfile } from "../actions/userActions.js";
+import { listMyOrder } from "../actions/orderActions.js";
+import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants.js";
 const ProfileScreen = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const [confirmPassword, setconfirmPassword] = useState('')
-  const [message, setMessage] = useState(null)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
 
   // const location = useLocation()
-  const userDetails = useSelector((state) => state.userDetails)
-  const { loading, error, user } = userDetails
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, error, user } = userDetails;
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const userUpdateProfile = useSelector((state) => state.userUpdateProfile)
-  const { success } = userUpdateProfile
+  const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+  const { success } = userUpdateProfile;
 
-  const orderListMy = useSelector((state) => state.orderListMy)
-  const { loading:loadingOrders,error:errorOrders,orders} = orderListMy
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
-  // console.log(`called in  ${location.pathname}`)
-  // console.log(userInfo)
   useEffect(() => {
     if (!userInfo) {
-      navigate('/login')
+      navigate("/login");
     } else {
-      if (!user||!user.name||success) {
-        dispatch({type:USER_UPDATE_PROFILE_RESET})
-        dispatch(getUserDetails('profile'))
-        dispatch(listMyOrder())
+      if (!user || !user.name || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
+        dispatch(getUserDetails("profile"));
+        dispatch(listMyOrder());
       } else {
-        setName(user.name)
-        setEmail(user.email)  
+        setName(user.name);
+        setEmail(user.email);
       }
     }
-  }, [dispatch, userInfo, navigate, user,success])
+  }, [dispatch, userInfo, navigate, user, success]);
 
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (password !== confirmPassword) {
-      setMessage(`Password mismatch.`)
+      setMessage(`Password mismatch.`);
     } else {
-      dispatch(updateUserProfile({ id: user._id, name, email, password }))
+      dispatch(updateUserProfile({ id: user._id, name, email, password }));
     }
-  }
+  };
 
   return (
     <Container>
       <Row>
-        <Col md={5} >
-          <h2 className="text-center">
-            My Profile
-          </h2>
+        <Col md={5}>
+          <h2 className="text-center">My Profile</h2>
           {message && <Message variant="danger">{message}</Message>}
           {error && <Message variant="danger">{error}</Message>}
           {success && <Message variant="success">Profile Updated !!</Message>}
@@ -124,53 +120,65 @@ const ProfileScreen = () => {
           </Form>
         </Col>
         <Col md={7}>
-          <h2 className='text-center'>
-            My Orders
-          </h2>
-          {loadingOrders?<Loader/>:errorOrders?<Message variant='danger'>{errorOrders}</Message>:(
-            <Table striped bordered hover responsive className='table-sm'>
-             <thead>
-              <tr>
-                <th className='text-center'>Id</th>
-                <th className='text-center'>Date</th>
-                <th className='text-center'>Total</th>
-                <th className='text-center'>Paid</th>
-                <th className='text-center'>Delivered</th>
-                <th className='text-center'></th>
-              </tr>
+          <h2 className="text-center">My Orders</h2>
+          {loadingOrders ? (
+            <Loader />
+          ) : errorOrders ? (
+            <Message variant="danger">{errorOrders}</Message>
+          ) : (
+            <Table striped bordered hover responsive className="table-sm">
+              <thead>
+                <tr>
+                  <th className="text-center">Id</th>
+                  <th className="text-center">Date</th>
+                  <th className="text-center">Total</th>
+                  <th className="text-center">Paid</th>
+                  <th className="text-center">Delivered</th>
+                  <th className="text-center"></th>
+                </tr>
               </thead>
               <tbody>
-                {
-                  orders.map(order=>{
-                    <tr key={order._id }>
-                      <td className='text-center'>{order._id}</td>
-                      <td className='text-center'>{order.createdAt.substring(0,10)}</td>
-                      <td className='text-center'>{order.totalPrice}</td>
-                      <td className='text-center'>{order.isPaid?order.paidAt.substring(0,10):(
-                        <i className='fas fa-times' style={{color:'red'}}></i>
+                {orders.map((order) => (
+                  <tr key={order._id}>
+                    <td className="text-center">{order._id}</td>
+                    <td className="text-center">
+                      {order.createdAt.substring(0, 10)}
+                    </td>
+                    <td className="text-center">{order.totalPrice}</td>
+                    <td className="text-center">
+                      {order.isPaid ? (
+                        order.paidAt.substring(0, 10)
+                      ) : (
+                        <i
+                          className="fas fa-times"
+                          style={{ color: "red" }}
+                        ></i>
                       )}
-                      </td>
-                      <td>{order.isDelivered?order.deliveredAT.substring(0,10):(
-                        <i className='fas fa-times' style={{color:'red'}}></i>
+                    </td>
+                    <td>
+                      {order.isDelivered ? (
+                        order.deliveredAT.substring(0, 10)
+                      ) : (
+                        <i
+                          className="fas fa-times"
+                          style={{ color: "red" }}
+                        ></i>
                       )}
-                      </td>
-                      <td className='text-center'>
-                        <LinkContainer to ={`/order/${order._id}`}>
-                          <Button variant='info'>Details</Button>
-                        </LinkContainer>
-                      </td>
-                    </tr>
-                  })
-                }
+                    </td>
+                    <td className="text-center">
+                      <LinkContainer to={`/order/${order._id}`}>
+                        <Button variant="info">Details</Button>
+                      </LinkContainer>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
-          )
-
-          }
+          )}
         </Col>
       </Row>
     </Container>
-  )
-}
+  );
+};
 
-export default ProfileScreen
+export default ProfileScreen;

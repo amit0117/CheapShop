@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Row,
@@ -8,39 +8,37 @@ import {
   Image,
   Card,
   Container,
-} from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import CheckoutSteps from '../components/CheckoutSteps'
-import Message from '../components/Message'
-import { createOrder } from '../actions/orderActions'
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import CheckoutSteps from "../components/CheckoutSteps";
+import Message from "../components/Message";
+import { createOrder } from "../actions/orderActions";
 const PlaceOrderScreen = () => {
-  const cart = useSelector((state) => state.cart)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // calculating various prices for placing order
   const addDecimal = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2)
-  }
+    return (Math.round(num * 100) / 100).toFixed(2);
+  };
   cart.itemsPrice = addDecimal(
-    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
-  )
-  cart.shippingPrice = addDecimal(cart.itemsPrice > 100 ? 0 : 10)
-  cart.taxPrice = addDecimal(Number((0.1 * cart.itemsPrice).toFixed(2)))
+    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  );
+  cart.shippingPrice = addDecimal(cart.itemsPrice > 100 ? 0 : 10);
+  cart.taxPrice = addDecimal(Number((0.1 * cart.itemsPrice).toFixed(2)));
   cart.totalPrice = addDecimal(
-    Number(cart.itemsPrice) +
-      Number(cart.shippingPrice) +
-      Number(cart.taxPrice),
-  )
-  const orderCreate = useSelector((state) => state.orderCreate)
-  const { order, success, error } = orderCreate
-  
+    Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)
+  );
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+
   useEffect(() => {
     if (success) {
       // console.log(` called in placeorderscreen in useeffect ${JSON.stringify(order)}`)
-      navigate(`/order/${order._id}`)
+      navigate(`/order/${order._id}`);
     }
-  }, [navigate, success,order])
+  }, [navigate, success, order]);
   const placeOrderHandler = () => {
     dispatch(
       createOrder({
@@ -50,11 +48,10 @@ const PlaceOrderScreen = () => {
         itemsPrice: cart.itemsPrice,
         shippingPrice: cart.shippingPrice,
         taxPrice: cart.taxPrice,
-        itemsPrice: cart.itemsPrice,
         totalPrice: cart.totalPrice,
-      }),
-    )
-  }
+      })
+    );
+  };
   return (
     <Container>
       <CheckoutSteps step1 step2 step3 step4 />
@@ -65,8 +62,8 @@ const PlaceOrderScreen = () => {
               <h2>Shipping</h2>
               <p>
                 <strong>Address: </strong>
-                {cart.shippingAddress.address}, {cart.shippingAddress.city},{' '}
-                {cart.shippingAddress.postalCode},{' '}
+                {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
+                {cart.shippingAddress.postalCode},{" "}
                 {cart.shippingAddress.country}
               </p>
             </ListGroup.Item>
@@ -92,7 +89,7 @@ const PlaceOrderScreen = () => {
                               src={item.image}
                               alt={item.name}
                               fluid
-                              style={{ borderRadius: '5%' }}
+                              style={{ borderRadius: "5%" }}
                             />
                           </Link>
                         </Col>
@@ -162,7 +159,7 @@ const PlaceOrderScreen = () => {
         </Col>
       </Row>
     </Container>
-  )
-}
+  );
+};
 
-export default PlaceOrderScreen
+export default PlaceOrderScreen;

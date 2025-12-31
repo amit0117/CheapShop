@@ -99,7 +99,6 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    // console.log('called useaction getuserdetails')
     const { data } = await axios.get(`/api/users/${id}`, config)
     dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
   } catch (error) {
@@ -181,7 +180,6 @@ export const deleteUser = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     }
-    // console.log(`called in delteuser in useraction and id is ${id}`)
      await axios.delete(`/api/users/${id}`, config)
 
     dispatch({ type: USER_DELETE_SUCCESS })

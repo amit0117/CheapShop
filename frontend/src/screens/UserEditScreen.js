@@ -34,8 +34,6 @@ const UserEditScreen = () => {
     success: successUpdate,
   } = userUpdate
 
-  // console.log(`called in  ${location.pathname}`)
-  // console.log(userInfo)
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: USER_UPDATE_RESET })

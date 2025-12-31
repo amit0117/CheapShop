@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   listProductDetails,
   createProductReview,
-} from '../actions/productActions.js'
-import { Link } from 'react-router-dom'
-import { FormControl } from 'react-bootstrap'
-// import { Form } from 'react-bootstrap'
+} from "../actions/productActions.js";
+import { Link } from "react-router-dom";
+import { FormControl } from "react-bootstrap";
 import {
   Row,
   Col,
@@ -17,69 +16,64 @@ import {
   ListGroupItem,
   Container,
   Form,
-} from 'react-bootstrap'
-import Rating from '../components/Rating.js'
-import Message from '../components/Message.js'
-import Loader from '../components/Loader.js'
-import Meta from '../components/Meta.js'
-// import axios from 'axios'
-// import products from '../products'
-import { useParams, useNavigate } from 'react-router-dom'
-import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstant'
+} from "react-bootstrap";
+import Rating from "../components/Rating.js";
+import Message from "../components/Message.js";
+import Loader from "../components/Loader.js";
+import Meta from "../components/Meta.js";
+
+import { useParams, useNavigate } from "react-router-dom";
+import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstant";
 
 const ProductScreen = (props) => {
-  const [qty, setQty] = useState(1)
-  const [rating, setRating] = useState(0)
-  const [comment, setComment] = useState('')
+  const [qty, setQty] = useState(1);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  //  for accessing params use useParams hooks
-  const { id } = useParams()
-  // console.log(`productscreen id is ${id}`)
-  const navigate = useNavigate()
-  //  const product=products.find(p=>p._id===id);
-  // const [product,setProduct]=useState({})
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const productDetails = useSelector((state) => state.productDetails)
-  const { loading, error, product } = productDetails
+  const productDetails = useSelector((state) => state.productDetails);
+  const { loading, error, product } = productDetails;
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const productCreateReview = useSelector((state) => state.productCreateReview)
+  const productCreateReview = useSelector((state) => state.productCreateReview);
   const {
     success: successproductCreateReview,
     error: errorproductCreateReview,
-  } = productCreateReview
+  } = productCreateReview;
   useEffect(() => {
     if (successproductCreateReview) {
-      alert('Review created successfully.')
-      setRating(0)
-      setComment('')
-      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+      alert("Review created successfully.");
+      setRating(0);
+      setComment("");
+      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
     }
-    dispatch(listProductDetails(id))
+    dispatch(listProductDetails(id));
     // const fetchProduct=async()=>{
     //   const res=await axios.get(`/api/products/${id}`)
     //   const data=res.data
     //   setProduct(data)
     // }
     // fetchProduct()
-  }, [dispatch, id, successproductCreateReview])
+  }, [dispatch, id, successproductCreateReview]);
 
   const addToCartHandler = () => {
-    navigate(`/cart/${id}?qty=${qty}`)
-  }
+    navigate(`/cart/${id}?qty=${qty}`);
+  };
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     dispatch(
       createProductReview(id, {
         rating,
         comment,
-      }),
-    )
-  }
+      })
+    );
+  };
   return (
     <Container>
       <Link className="btn btn-primary m-3" to="/">
@@ -91,7 +85,7 @@ const ProductScreen = (props) => {
         <Message variant="danger">{error}</Message>
       ) : (
         <Container>
-          <Meta title={product.name}/>
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
@@ -129,7 +123,7 @@ const ProductScreen = (props) => {
                     <Row>
                       <Col>Availability: </Col>
                       <Col>
-                        {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                        {product.countInStock > 0 ? "In Stock" : "Out Of Stock"}
                       </Col>
                     </Row>
                   </ListGroupItem>
@@ -148,7 +142,7 @@ const ProductScreen = (props) => {
                                 <option key={x + 1} value={x + 1}>
                                   {x + 1}
                                 </option>
-                              ),
+                              )
                             )}
                           </FormControl>
                         </Col>
@@ -183,9 +177,7 @@ const ProductScreen = (props) => {
                     <p>{review.createdAt.substring(0, 10)}</p>
                     <p>{review.comment}</p>
                   </ListGroup.Item>
-                )
-                )
-                }
+                ))}
                 <ListGroup.Item>
                   <h2 className="text-center">Write a review</h2>
                   {errorproductCreateReview && (
@@ -235,7 +227,7 @@ const ProductScreen = (props) => {
         </Container>
       )}
     </Container>
-  )
-}
+  );
+};
 
-export default ProductScreen
+export default ProductScreen;

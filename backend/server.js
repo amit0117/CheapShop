@@ -8,9 +8,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
-// Load .env file from backend directory (relative to where server.js is located)
-// Since server.js is in backend/ and .env is also in backend/, we use process.cwd() + '/backend/.env'
-// Or we can use import.meta.url to get the current file's directory
+// Load .env file from backend directory
 dotenv.config({ path: path.join(process.cwd(), "backend", ".env") });
 
 connectDB();

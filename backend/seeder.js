@@ -20,7 +20,6 @@ const importData = async () => {
       return { ...product, user: adminUser };
     });
     await Product.insertMany(sampleProducts);
-    console.log("data imported");
   } catch (error) {
     console.log(`error ${error}`);
   }

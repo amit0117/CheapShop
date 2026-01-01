@@ -1,51 +1,32 @@
 import express from "express";
 import multer from "multer";
-import path from "path";
-import pkg from "cloudinary";
-const cloudinary = pkg;
+import { storage } from "../cloudinary.js";
 import asyncHandler from "express-async-handler";
+import { protect } from "../middleware/authMiddleware.js";
+import { admin } from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
-// may get checkFileTypes from stackOverflow
-function checkFileType(file, cb) {
-  const filetypes = /png|jpg|jpeg/;
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (extname && mimetype) {
-    return cb(null, true);
-  } else {
-    cb("Only png,j[eg,jpg images are allowed!");
-  }
-}
-
+// Use CloudinaryStorage - uploads directly to Cloudinary, no local storage needed
+// CloudinaryStorage already validates file types via allowedFormats in cloudinary.js
 const upload = multer({
   storage,
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  },
 });
 
 router.post(
   "/",
-  upload.single("image", { width: 250, height: 250 }),
+  protect,
+  admin,
+  upload.single("image"),
   asyncHandler(async (req, res) => {
-    const uploadPhoto = await cloudinary.uploader.upload(
-      `${req.file.path.toLowerCase()}`,
-      { width: 250, height: 250 }
-    );
-    res.send(uploadPhoto.url.toLowerCase());
+    if (!req.file) {
+      res.status(400);
+      throw new Error("No file uploaded");
+    }
+
+    // With CloudinaryStorage, the file is uploaded directly to Cloudinary
+    // req.file.path contains the Cloudinary secure URL
+    res.send(req.file.path);
   })
 );
 

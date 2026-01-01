@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { HelmetProvider } from "react-helmet-async";
+import "./utils/axiosConfig"; // Configure axios before any imports
 import store from "./store.js";
 import "./bootstrap.min.css";
 import "./index.css";

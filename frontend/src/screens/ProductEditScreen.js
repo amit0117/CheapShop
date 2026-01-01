@@ -9,6 +9,7 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { Image } from "react-bootstrap";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.js";
@@ -32,6 +33,7 @@ const ProductEditScreen = () => {
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
@@ -43,11 +45,10 @@ const ProductEditScreen = () => {
     success: successUpdate,
   } = productUpdate;
 
-  // console.log(`called in  ${location.pathname}`)
-  // console.log(userInfo)
+  const userInfo = useSelector((state) => state.userLogin).userInfo;
+
   useEffect(() => {
     if (successUpdate) {
-      // dispatch({type:PRODUCT_CREATE_RESET})
       dispatch({ type: PRODUCT_UPDATE_RESET });
       navigate("/admin/productlist");
       dispatch(listProductDetails(id));
@@ -68,21 +69,30 @@ const ProductEditScreen = () => {
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append("image", file);
     setUploading(true);
+    setUploadError("");
+
     try {
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      // console.log(formData)
       const { data } = await axios.post("/api/upload", formData, config);
       setImage(data);
       setUploading(false);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      setUploadError(
+        err.response?.data?.message || err.message || "Image upload failed"
+      );
       setUploading(false);
     }
   };
@@ -109,6 +119,7 @@ const ProductEditScreen = () => {
         <h2 className="text-center">Update Product</h2>
         {loadingUpdate && <Loader />}
         {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
+        {uploadError && <Message variant="danger">{uploadError}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (
@@ -134,13 +145,48 @@ const ProductEditScreen = () => {
               ></FormControl>
             </Form.Group>
             <Form.Group controlId="image" className="mt-2">
-              <Form.Group controlId="formFileMultiple" className="mb-3 mt-3">
-                <Form.Label> Image</Form.Label>
+              <Form.Group
+                controlId="formFileMultiple"
+                className="mb-3 mt-3 d-flex flex-column align-items-start justify-content-center"
+              >
+                <Form.Label>Image</Form.Label>
+                {image && image.trim() !== "" && (
+                  <div className="my-3">
+                    <Image
+                      src={image}
+                      alt="Product preview"
+                      fluid
+                      style={{
+                        width: "300px",
+                        height: "300px",
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                        border: "1px solid #ddd",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                )}
                 <Form.Control
                   type="file"
-                  multiple
+                  multiple={false}
                   onChange={uploadFileHandler}
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  id="image-upload-input"
                 />
+                <Form.Label
+                  htmlFor="image-upload-input"
+                  className="btn btn-outline-primary"
+                  style={{ cursor: "pointer" }}
+                >
+                  {image?.trim() !== "" ? "Change Image" : "Choose Image"}
+                </Form.Label>
+                <Form.Text className="text-muted d-block mt-2">
+                  {image
+                    ? "Click to select a new image to replace the current one"
+                    : "Click to select an image to upload"}
+                </Form.Text>
               </Form.Group>
               {uploading && <Loader />}
             </Form.Group>
